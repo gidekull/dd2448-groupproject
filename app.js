@@ -9,9 +9,9 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var Sequelize = require('sequelize');
 var sequelize = require('./controllers/sequelizeConfig.js');
+var router = require('./controllers/controllers.js');
 
-
-var index = require('./routes/index');
+require('./controllers/passport.js');
 
 var app = express();
 
@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
+app.use('/', router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,6 +1,6 @@
 var passport = require('passport');
 var User = require('../models/user.js');
-var LocalStrategy = require('passport-local').Strategy;
+//var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 	
 passport.serializeUser(function(user, done) {
@@ -17,7 +17,21 @@ passport.deserializeUser(function(id, done){
 
 });
 
-passport.use('signup', new LocalStrategy({
+passport.use('fb', new FacebookStrategy({
+    clientID: 423681404675552,
+    clientSecret: "f7a8e6862f5ea72c6ec535262f97a23d",
+    callbackURL: "https:localhost:3000/auth/facebook/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+  	console.log("hej");
+    /*User.findOrCreate(..., function(err, user) {
+      if (err) { return done(err); }
+      done(null, user);
+    });*/
+  }
+));
+
+/*passport.use('signup', new LocalStrategy({
 	usernameField: 'name',
 	passwordField: 'password',
 	passReqToCallback: true
@@ -45,8 +59,6 @@ passport.use('signup', new LocalStrategy({
 				}
 			})
 			//console.log(req.body);
-			
-
 		}
 	}).catch(function(err){
 		if (err){
@@ -82,16 +94,4 @@ passport.use('signin', new LocalStrategy({
 		return done(err);
 	})
 }));
-
-passport.use(new FacebookStrategy({
-    clientID: 423681404675552,
-    clientSecret: f7a8e6862f5ea72c6ec535262f97a23d,
-    callbackURL: "http://www.example.com/auth/facebook/callback"
-  },
-  function(accessToken, refreshToken, profile, done) {
-    User.findOrCreate(..., function(err, user) {
-      if (err) { return done(err); }
-      done(null, user);
-    });
-  }
-));
+*/
