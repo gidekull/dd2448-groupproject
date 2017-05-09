@@ -1,5 +1,5 @@
 var passport = require('passport');
-var User = require('../models/user.js');
+var Fbuser = require('../models/Fbuser.js');
 //var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 	
@@ -17,17 +17,25 @@ passport.deserializeUser(function(id, done){
 
 });
 
-passport.use('fb', new FacebookStrategy({
+passport.use('facebook', new FacebookStrategy({
     clientID: 423681404675552,
     clientSecret: "f7a8e6862f5ea72c6ec535262f97a23d",
-    callbackURL: "https:localhost:3000/auth/facebook/callback"
+    callbackURL: "https://localhost:3000/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-  	console.log("hej");
-    /*User.findOrCreate(..., function(err, user) {
-      if (err) { return done(err); }
-      done(null, user);
-    });*/
+    Fbuser.findOne({where: {'id': profile.id}}).then(function(err, user) {
+      if (err) { 
+      	return done(err); 
+      } else if (user){
+      		done(null, user);
+      } else {
+      	console.log(profile);
+      	var newUser = Fbuser.create({
+			id: profile.id, name: profile.displayName
+		});
+		return done(null, newUser);
+      }
+    });
   }
 ));
 
