@@ -4,14 +4,38 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var Store = require('connect-session-sequelize')(session.Store);
 
 //Added
 var passport = require('passport');
 var Sequelize = require('sequelize');
 var sequelize = require('./controllers/sequelizeConfig.js');
 var router = require('./controllers/controllers.js');
+var Sessions = require("./models/sessions.js")
 
 require('./controllers/passport.js');
+
+function extendDefaultFields(defaults, session) {
+	return {
+    	data: defaults.data,
+    	expires: defaults.expires,
+    	uId: session.passport.user
+	};
+}
+
+var store = new Store({
+    db: sequelize,
+    table: 'Session',
+  	extendDefaultFields: extendDefaultFields,
+  });
+
+
+var expressSession = session({secret: 'brasäkerhet', 
+	resave: true, 
+	saveUninitialized: false,
+	store: store,
+});
 
 var app = express();
 
@@ -26,6 +50,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(expressSession);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', router);
 

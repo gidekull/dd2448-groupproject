@@ -18,7 +18,9 @@
     "bcrypt": "*",
     "mysql": "*",
     "passport-facebook": "*",
-    "https": "*"
+    "https": "*",
+    "connect-session-sequelize": "*",
+    "express-session": "*"
   }
 }
 

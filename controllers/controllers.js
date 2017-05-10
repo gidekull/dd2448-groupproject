@@ -4,7 +4,7 @@ var express = require('express');
 var passport = require('passport');
 var router = express.Router();
 
-var User = require("../models/user.js");
+var Fbuser = require("../models/fbuser.js");
 
 
 // Redirect the user to Facebook for authentication.  When complete,
@@ -17,11 +17,19 @@ router.get('/auth/facebook', passport.authenticate('facebook'));
 // access was granted, the user will be logged in.  Otherwise,
 // authentication has failed.
 router.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { successRedirect: '/',
-                                      failureRedirect: '/login' }));
+  passport.authenticate('facebook', { successRedirect: '/profile',
+                                      failureRedirect: '/signin' }));
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
+});
+
+router.get('/signin', function(req, res, next) {
+  res.render('signin');
+});
+
+router.get('/profile', authenticated, function(req, res, next) {
+  res.render('profile', {name: req.user.name});
 });
 
 module.exports = router;

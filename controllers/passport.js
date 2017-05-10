@@ -4,17 +4,16 @@ var Fbuser = require('../models/Fbuser.js');
 var FacebookStrategy = require('passport-facebook').Strategy;
 	
 passport.serializeUser(function(user, done) {
-	console.log(user.id);
+	//console.log(user)
 	done(null, user.id);
 });
 
 passport.deserializeUser(function(id, done){
-	User.findById(id).then(function(user){ 
+	Fbuser.findById(id).then(function(user){ 
 		done(null,user);
 	}).catch(function(err){
 		done(err, user);
 	});
-
 });
 
 passport.use('facebook', new FacebookStrategy({
@@ -23,83 +22,21 @@ passport.use('facebook', new FacebookStrategy({
     callbackURL: "https://localhost:3000/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-    Fbuser.findOne({where: {'id': profile.id}}).then(function(err, user) {
-      if (err) { 
-      	return done(err); 
-      } else if (user){
-      		done(null, user);
-      } else {
-      	console.log(profile);
+    Fbuser.findOne({where: {'id': profile.id}}).then(function(user) {
+		if (user){
+      		return done(null, user);
+     	} else {
       	var newUser = Fbuser.create({
 			id: profile.id, name: profile.displayName
+		}).then(function(){
+			return done(null, newUser);
 		});
-		return done(null, newUser);
       }
-    });
-  }
-));
-
-/*passport.use('signup', new LocalStrategy({
-	usernameField: 'name',
-	passwordField: 'password',
-	passReqToCallback: true
-}, function(req, name, password, done){
-	console.log(req.body);
-	User.findOne({where: {'email': req.body.email}}).then(function(user){
-		console.log(req.body);
-		//console.log(user.dataValues);
-		if (user){
-			return done(null, false, {message: 'Email is unavailable.'});
-		} else {
-			User.findOne({where: {'name': name}}).then(function(user1){
-				if (user1){
-				return done(null, false, {message: 'Name is unavailable.'});
-				} else {
-					var newUser = User.create({
-					name: name, email: req.body.email,
-					password: password, password_confirmation: req.body.password_confirmation
-			});
-				}
-			}).catch(function(err){
-				if (err){
-					console.log(err);
-					return done(err);
-				}
-			})
-			//console.log(req.body);
-		}
-	}).catch(function(err){
+    }).catch(function(err){
 		if (err){
 			console.log(err);
 			return done(err);
 		}
 	});
-}));
-
-passport.use('signin', new LocalStrategy({
-	usernameField: 'name',
-	passwordField: 'password',
-	passReqToCallback: true
-}, function(req, name, password, done){
-	User.findOne({where: {
-		email: name
-	}
-	}).then(function(user){
-		if (user){
-			if (User.login(user, password)){
-				console.log("A user has signed in!");
-				return done(null, user);
-			} else {
-				console.log("A user has been rejected");
-				return done(false);
-			}
-		} else {
-			console.log("A user that does not exist tried to log in");
-			return done(false)
-		}
-	}).catch(function(err){
-		console.log(err);
-		return done(err);
-	})
-}));
-*/
+  }
+));
