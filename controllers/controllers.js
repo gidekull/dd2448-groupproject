@@ -3,8 +3,12 @@
 var express = require('express');
 var passport = require('passport');
 var router = express.Router();
+var csrf = require('csurf');
 
 var Fbuser = require("../models/fbuser.js");
+
+//var csrf_init = csrf();
+//router.use(csrf_init);
 
 
 // Redirect the user to Facebook for authentication.  When complete,
@@ -28,13 +32,16 @@ router.get('/signin', function(req, res, next) {
   res.render('signin');
 });
 
+router.post('/signin', function(req, res, next){
+	res.redirect('/auth/facebook');
+});
+
 router.get('/profile', authenticated, function(req, res, next) {
   res.render('profile', {name: req.user.name});
 });
 
 module.exports = router;
 
-//How to???
 function authenticated(req, res, next){
 	if (req.isAuthenticated()){
 		next();

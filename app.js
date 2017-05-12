@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var Store = require('connect-session-sequelize')(session.Store);
 
+
 //Added
 var passport = require('passport');
 var Sequelize = require('sequelize');
@@ -54,6 +55,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressSession);
 app.use(passport.initialize());
 app.use(passport.session());
+
+
 
 app.use('/', router);
 

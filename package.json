@@ -20,7 +20,8 @@
     "passport-facebook": "*",
     "https": "*",
     "connect-session-sequelize": "*",
-    "express-session": "*"
+    "express-session": "*",
+    "csurf": "*"
   }
 }
 

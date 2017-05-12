@@ -4,7 +4,7 @@ var Fbuser = require('../models/Fbuser.js');
 var FacebookStrategy = require('passport-facebook').Strategy;
 	
 passport.serializeUser(function(user, done) {
-	//console.log(user)
+	console.log(user.id)
 	done(null, user.id);
 });
 
@@ -26,10 +26,12 @@ passport.use('facebook', new FacebookStrategy({
 		if (user){
       		return done(null, user);
      	} else {
-      	var newUser = Fbuser.create({
+      	Fbuser.create({
 			id: profile.id, name: profile.displayName
 		}).then(function(){
-			return done(null, newUser);
+			Fbuser.findOne({where: {'id': profile.id}}).then(function(user) {
+				return done(null, user);
+			})
 		});
       }
     }).catch(function(err){
