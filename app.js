@@ -17,6 +17,7 @@ var Sessions = require("./models/sessions.js")
 
 require('./controllers/passport.js');
 
+//configuration of store. 
 function extendDefaultFields(defaults, session) {
 	return {
     	data: defaults.data,
@@ -25,6 +26,7 @@ function extendDefaultFields(defaults, session) {
 	};
 }
 
+//Adding a session store to be able to store sessions in db. 
 var store = new Store({
     db: sequelize,
     table: 'Session',
@@ -45,9 +47,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+//Standard packaging for express. 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());

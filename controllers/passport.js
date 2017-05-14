@@ -2,12 +2,14 @@ var passport = require('passport');
 var Fbuser = require('../models/Fbuser.js');
 //var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
-	
+
+//Serialize user, keep them authenticated. 
 passport.serializeUser(function(user, done) {
 	console.log(user.id)
 	done(null, user.id);
 });
 
+//To log out the user, deserialize the user. 
 passport.deserializeUser(function(id, done){
 	Fbuser.findById(id).then(function(user){ 
 		done(null,user);
@@ -22,8 +24,9 @@ passport.use('facebook', new FacebookStrategy({
     callbackURL: "https://localhost:3000/auth/facebook/callback",
     enableProof: true
   },
+  //If the user is in the db, simply log in the user. 
+  //Else, create a user to store in the db. 
   function(accessToken, refreshToken, profile, done) {
-  	console.log(accessToken);
     Fbuser.findOne({where: {'id': profile.id}}).then(function(user) {
 		if (user){
       		return done(null, user);

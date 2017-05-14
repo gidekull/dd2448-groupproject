@@ -14,7 +14,7 @@ var Fbuser = require("../models/fbuser.js");
 //To protect from CSRF
 var state_token = crypto.randomBytes(48)
 
-
+//Standard documentation code/comments below. 
 // Redirect the user to Facebook for authentication.  When complete,
 // Facebook will redirect the user back to the application at
 //     /auth/facebook/callback
@@ -46,6 +46,7 @@ router.get('/profile', authenticated, function(req, res, next) {
 
 module.exports = router;
 
+//Checks if the user is authenticated for different routes. 
 function authenticated(req, res, next){
 	if (req.isAuthenticated()){
 		next();
