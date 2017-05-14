@@ -19,9 +19,11 @@ passport.deserializeUser(function(id, done){
 passport.use('facebook', new FacebookStrategy({
     clientID: 423681404675552,
     clientSecret: "f7a8e6862f5ea72c6ec535262f97a23d",
-    callbackURL: "https://localhost:3000/auth/facebook/callback"
+    callbackURL: "https://localhost:3000/auth/facebook/callback",
+    enableProof: true
   },
   function(accessToken, refreshToken, profile, done) {
+  	console.log(accessToken);
     Fbuser.findOne({where: {'id': profile.id}}).then(function(user) {
 		if (user){
       		return done(null, user);

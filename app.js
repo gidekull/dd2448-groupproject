@@ -32,9 +32,10 @@ var store = new Store({
   });
 
 
-var expressSession = session({secret: 'brasäkerhet', 
+var expressSession = session({secret: 'Riktigtbrasäkerhetsomingenkangissaförjagharsåhimlalångnyckel:Dobsskämt', 
 	resave: true, 
 	saveUninitialized: false,
+	secure: true, 
 	store: store,
 });
 
